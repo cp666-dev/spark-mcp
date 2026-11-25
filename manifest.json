@@ -1,8 +1,9 @@
 {
     "package_name": "Spark MCP",
     "id": "com.cp.spark",
+    "title": "Spark MCP",
     "name": "Spark MCP",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "manufacturer": "CP",
     "description": "Tell it what a track needs and it prints your track through plugins you own, sets compressors to work equally hard, level matches them and lets you pick blind. Bring your own Anthropic or OpenAI key.",
     "categories": [
