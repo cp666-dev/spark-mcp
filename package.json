@@ -1,7 +1,7 @@
 {
   "name": "spark-mcp",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "Spark MCP: blind plugin shootouts on your own tracks, in a LUNA panel or from any MCP agent",
   "scripts": {
