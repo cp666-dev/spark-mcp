@@ -1,0 +1,501 @@
+/*
+ * UA Assistive Intelligence: side panel, V2 "Strip".
+ * Production stylesheet. Requires tokens.css. All sizes are 1x CSS px (LUNA renders at DPR 2,
+ * so 1px here = 1 device-px pair; hairlines that must be 1 device px use 0.5px where noted).
+ * Class prefix: aip-  (Assistive Intelligence Panel). State is carried by data-* attributes and
+ * is-* classes so the engine can drive it without touching styles.
+ */
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--aip-page); }
+
+.aip {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-width: 306px;
+  overflow: hidden;
+  background: var(--aip-page);
+  color: var(--aip-text);
+  font: bold 10px/1.3 var(--luna-font);
+  text-shadow: var(--aip-text-shadow);
+  -webkit-font-smoothing: antialiased;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+:where(.aip) button {
+  font: inherit;
+  color: inherit;
+  text-shadow: inherit;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: default;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.aip [hidden] { display: none !important; }
+:where(.aip) button:focus { outline: none; }
+:where(.aip) button:focus-visible { outline: 1px solid var(--aip-seg-underline); outline-offset: -2px; }
+.aip svg.aip-ico { display: block; flex: none; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.aip .aip-ico-10 { width: 10px; height: 10px; }
+.aip .aip-ico-11 { width: 11px; height: 11px; }
+.aip .aip-ico-12 { width: 12px; height: 12px; }
+
+/* ---------------------------------------------------------------- mark */
+
+.aip-mark { display: block; flex: none; width: 44px; height: 27px; overflow: visible; }
+.aip-mark path { transition: fill .2s ease-out, opacity .08s linear; }
+.aip-mark .core    { fill: transparent; }
+.aip-mark .ring    { fill: var(--aip-text); }
+.aip-mark .letters { fill: var(--aip-text); }
+
+.aip-mark[data-state="offline"] .ring,
+.aip-mark[data-state="offline"] .letters { fill: var(--aip-text-dim); }
+
+.aip-mark[data-state="waking"] .ring    { fill: var(--aip-text-grey); }
+.aip-mark[data-state="waking"] .letters { fill: var(--aip-text-grey); animation: aip-wake 1.6s ease-in-out infinite alternate; }
+
+.aip-mark[data-state="listening"] .core { fill: var(--luna-btn-blue-top); }
+
+.aip-mark[data-state="hearing"] .core    { fill: var(--aip-amber); opacity: var(--aip-level, 1); }
+.aip-mark[data-state="hearing"] .ring    { fill: var(--aip-amber); }
+.aip-mark[data-state="hearing"] .letters { fill: var(--aip-page); }
+
+.aip-mark[data-state="thinking"] .core    { fill: var(--luna-btn-blue-top); }
+.aip-mark[data-state="thinking"] .ring    { fill: var(--aip-amber); animation: aip-think .9s ease-in-out 7 alternate; }
+.aip-mark[data-state="thinking"] .letters { fill: var(--aip-amber); }
+
+.aip-mark[data-state="paused"] .core    { fill: var(--aip-section); }
+.aip-mark[data-state="paused"] .ring,
+.aip-mark[data-state="paused"] .letters { fill: var(--aip-text-grey); }
+
+/* one-shot when a new suggestion arrives: add .is-arrive, remove on animationend */
+.aip-mark.is-arrive .ring { animation: aip-arrive .16s ease-out 2 alternate; }
+
+@keyframes aip-wake   { from { opacity: .35; } to { opacity: 1; } }
+@keyframes aip-think  { from { opacity: 1; } to { opacity: .55; } }
+@keyframes aip-arrive { to { fill: var(--aip-hover); } }
+
+/* ---------------------------------------------------------------- meter bridge (status + mics) */
+
+.aip-bridge {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 10px;
+  background: var(--aip-bridge);
+  border-bottom: 1px solid var(--aip-line);
+}
+.aip-state { display: flex; align-items: center; gap: 10px; }
+.aip-state-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.aip-state-word { font-size: 14px; line-height: 16px; letter-spacing: 0; }
+.aip-state-detail { font-size: 10px; line-height: 12px; color: var(--aip-text-grey); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.aip[data-state="offline"] .aip-state-word,
+.aip[data-state="waking"]  .aip-state-word,
+.aip[data-state="paused"]  .aip-state-word { color: var(--aip-text-grey); }
+
+.aip-btn {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 22px;
+  padding: 0 8px;
+  border: 1px solid var(--aip-edge);
+  border-radius: 2px;
+  background: var(--aip-skin-grey);
+  color: var(--aip-text);
+  font-size: 10px;
+  line-height: 1;
+}
+.aip-btn:hover { color: var(--aip-hover); }
+.aip-btn:active { background: var(--aip-skin-grey-down); }
+.aip-btn.is-open, .aip-btn.is-on { background: var(--aip-skin-on); }
+.aip-btn[disabled] { color: var(--aip-text-dim); }
+
+.aip-mics { display: flex; flex-direction: column; gap: 7px; }
+.aip-mic { display: flex; align-items: center; gap: 6px; height: 12px; }
+.aip-mic-name { flex: none; width: 58px; font-size: 9px; line-height: 12px; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.aip-meter { flex: 1; min-width: 0; display: flex; gap: 1px; height: 6px; background: var(--aip-line); }
+.aip-meter i { flex: 1; background: var(--aip-slot); }
+.aip-meter i.is-lit { background: var(--aip-green); }
+.aip-meter i.is-lit.is-hot { background: var(--aip-pumpkin); }
+.aip-mics.is-idle .aip-meter { opacity: .35; }
+.aip-mic-input { flex: none; min-width: 26px; font-size: 9px; line-height: 12px; text-align: right; color: var(--aip-text-grey); white-space: nowrap; }
+.aip-mic-x { flex: none; width: 12px; height: 12px; display: flex; align-items: center; justify-content: center; color: var(--aip-text-grey); }
+.aip-mic-x:hover { color: var(--aip-hover); }
+.aip-mics-none { height: 12px; font-size: 9px; line-height: 12px; color: var(--aip-text-dim); text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ---------------------------------------------------------------- context cells (click cuts, setups) */
+
+.aip-ctx { flex: none; display: flex; flex-direction: column; gap: 4px; padding: 6px 6px 0; }
+.aip-ctx-row { display: flex; gap: 4px; }
+.aip-cell {
+  min-width: 0;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 6px;
+  background: var(--aip-field);
+  border: 1px solid var(--aip-field-edge);
+  border-radius: 2px;
+  text-align: left;
+}
+.aip-cell--click { flex: 1; }
+.aip-cell--setups { flex: none; width: var(--aip-setups-w); }
+.aip-cell.is-open { background: var(--luna-btn-blue-top); }
+.aip-cell-k { flex: none; font-size: 9px; line-height: 12px; color: var(--aip-text-dim); }
+.aip-cell-v { flex: 1; min-width: 0; font-size: 10px; line-height: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.aip-cell-v.is-empty { color: var(--aip-text-dim); }
+.aip-cell-ico { flex: none; color: var(--aip-text-grey); display: flex; }
+.aip-cell.is-open .aip-cell-ico { color: var(--aip-text); }
+button.aip-cell-ico:hover, .aip-cell--setups:hover .aip-cell-ico { color: var(--aip-hover); }
+
+/* ---------------------------------------------------------------- live caption (reserved height: never jumps) */
+
+.aip-cap { flex: none; padding: 4px 6px 6px; }
+.aip-cap-field {
+  height: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+  background: var(--aip-field-dark);
+  border: 1px solid var(--aip-line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.aip-cap-src { flex: none; max-width: 96px; font-size: 9px; line-height: 12px; color: var(--aip-amber); text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.aip-cap[data-mode="rest"] .aip-cap-src { color: var(--aip-text-dim); }
+/* RTL box keeps the newest words visible and clips the start of a long line */
+.aip-cap-text { flex: 1; min-width: 0; font-size: 11px; line-height: 14px; color: var(--aip-text-row); white-space: nowrap; overflow: hidden; direction: rtl; text-align: left; transition: color .4s; }
+.aip-cap-text > span { direction: ltr; unicode-bidi: embed; }
+.aip-cap-text.is-overflow { -webkit-mask-image: linear-gradient(to right, transparent 0, #000 16px); mask-image: linear-gradient(to right, transparent 0, #000 16px); }
+.aip-cap[data-mode="final"]   .aip-cap-text { color: rgba(255,255,255,.45); }
+.aip-cap[data-mode="request"] .aip-cap-text { color: var(--aip-text); }
+.aip-cap[data-mode="rest"]    .aip-cap-text { visibility: hidden; }
+
+/* ---------------------------------------------------------------- tags (LUNA tag skins) */
+
+.aip-tag {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  height: 16px;
+  padding: 0 4px;
+  border: 1px solid var(--aip-edge);
+  border-radius: 2px;
+  font-size: 9px;
+  line-height: 1;
+  white-space: nowrap;
+  text-shadow: none;
+}
+.aip-tag--check   { background: var(--aip-tag-yellow); color: var(--aip-page); }
+.aip-tag--request { background: var(--aip-tag-blue); color: var(--aip-text); text-shadow: var(--aip-text-shadow); padding: 0 5px; }
+.aip-tag--new     { background: var(--aip-tag-blue); color: var(--aip-text); text-shadow: var(--aip-text-shadow); }
+.aip-tag--deletes { background: var(--aip-tag-red); color: var(--aip-text); text-shadow: var(--aip-text-shadow); height: 14px; font-size: 8px; }
+
+/* ---------------------------------------------------------------- section header */
+
+.aip-sec {
+  flex: none;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  background: var(--aip-section);
+  border-top: 1px solid var(--aip-line);
+  border-bottom: 1px solid var(--aip-line);
+}
+.aip-sec-side { flex: none; width: 52px; display: flex; align-items: center; gap: 6px; }
+.aip-sec-side--end { justify-content: flex-end; }
+.aip-sec-title { flex: 1; min-width: 0; text-align: center; color: var(--aip-text-section); white-space: nowrap; }
+.aip-sec-count { color: var(--aip-amber); }
+.aip-sec-count.is-zero { color: var(--aip-text-dim); }
+button.aip-tag--new:hover { color: var(--aip-hover); }
+
+/* ---------------------------------------------------------------- slot well */
+
+.aip-slots { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 6px; }
+.aip-well {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--aip-field-dark);
+  border: 1px solid #000;
+  border-radius: 4px;
+}
+.aip-well::-webkit-scrollbar { width: 8px; }
+.aip-well::-webkit-scrollbar-track { background: transparent; }
+.aip-well::-webkit-scrollbar-thumb { background: var(--luna-btn-grey-top); border-radius: 4px; border: 2px solid var(--aip-field-dark); }
+
+.aip-empty { display: flex; flex-direction: column; gap: 8px; padding: 8px; color: var(--aip-text-grey); }
+
+/* ---------------------------------------------------------------- slot */
+
+.aip-slot {
+  flex: none;
+  display: flex;
+  background: var(--aip-slot);
+  border: 1px solid var(--aip-edge);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.aip-slot-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 7px; padding: 8px 8px 10px 9px; }
+.aip-slot-head { display: flex; align-items: flex-start; gap: 7px; }
+.aip-slot-n {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--aip-field-dark);
+  border: 1px solid #000;
+  border-radius: 2px;
+  font-size: 9px;
+  line-height: 1;
+  color: var(--aip-text-grey);
+}
+.aip-slot-title { flex: 1; min-width: 0; font-size: 12px; line-height: 15px; overflow-wrap: anywhere; }
+.aip-dismiss { flex: none; width: 14px; height: 16px; display: flex; align-items: center; justify-content: center; color: var(--aip-text-grey); }
+.aip-dismiss:hover { color: var(--aip-hover); }
+
+.aip-slot-detail { display: flex; flex-direction: column; gap: 6px; padding-left: 23px; }
+.aip-slot--status .aip-slot-detail { padding-left: 0; }   /* running / failed / invalid have no number box */
+
+.aip-check { display: flex; align-items: center; gap: 6px; }
+.aip-check-why { flex: 1; min-width: 0; color: var(--aip-pumpkin); }
+
+.aip-kv { display: flex; gap: 6px; }
+.aip-kv-k { flex: none; width: 36px; font-size: 9px; line-height: 13px; color: var(--aip-text-dim); text-transform: uppercase; }
+.aip-kv-v { flex: 1; min-width: 0; color: var(--aip-text-grey); overflow-wrap: anywhere; }
+.aip-reason { color: var(--aip-text-grey); }
+
+/* variants: LUNA segmented toggle (SHOW popover pattern) */
+.aip-seg { display: flex; }
+.aip-seg-btn {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px 1px;
+  background: var(--aip-skin-grey);
+  border: 1px solid var(--aip-edge);
+  color: var(--aip-text-grey);
+  font-size: 9px;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.aip-seg-btn + .aip-seg-btn { margin-left: -1px; }
+.aip-seg-btn:first-child { border-radius: 2px 0 0 2px; }
+.aip-seg-btn:last-child  { border-radius: 0 2px 2px 0; }
+.aip-seg-btn:hover { color: var(--aip-hover); }
+.aip-seg-btn.is-on { background: var(--aip-skin-on); color: var(--aip-text); }
+.aip-seg-btn.is-on::after { content: ""; position: absolute; left: 3px; right: 3px; bottom: 2px; height: 2px; background: var(--aip-seg-underline); }
+.aip-seg-btn[disabled] { color: var(--aip-text-dim); }
+
+/* steps */
+.aip-steps { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.aip-step { display: flex; gap: 6px; color: var(--aip-text-step); }
+.aip-step-mk { flex: none; width: 14px; height: 13px; display: flex; align-items: center; justify-content: center; }
+.aip-step-mk::before { content: ""; width: 3px; height: 3px; background: var(--aip-text-dim); }       /* pending bullet */
+.aip-step-t { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.aip-step[data-s="done"] .aip-step-mk::before,
+.aip-step[data-s="failed"] .aip-step-mk::before { display: none; }
+.aip-step[data-s="done"] .aip-step-mk { color: var(--aip-green); }
+.aip-step[data-s="failed"] .aip-step-mk { color: var(--aip-red); }
+.aip-step[data-s="failed"] { color: var(--aip-text-destructive); }
+.aip-step[data-s="running"] { color: var(--aip-amber); }
+.aip-step[data-s="running"] .aip-step-mk::before { width: 6px; height: 6px; border-radius: 50%; background: var(--aip-amber); }
+.aip-step[data-s="todo"] { color: var(--aip-text-dim); }
+.aip-step[data-s="todo"] .aip-step-mk::before { width: 4px; height: 4px; border-radius: 50%; background: none; border: 1px solid var(--aip-text-dim); }
+.aip-step.is-destructive { gap: 6px; padding: 4px 5px; border-radius: 2px; background: var(--aip-destructive-tint); color: var(--aip-text-destructive); }
+.aip-step.is-destructive .aip-step-mk { display: none; }
+
+/* GO column: the whole right edge of a slot is the target */
+.aip-go {
+  flex: none;
+  align-self: stretch;
+  width: var(--aip-go-w);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border-left: 1px solid #000;
+  background: var(--aip-skin-on);
+}
+.aip-go-label { font-size: 13px; line-height: 15px; }
+.aip-go-key { font-size: 9px; line-height: 11px; color: var(--aip-key-on); }
+.aip-go:hover .aip-go-label { color: var(--aip-hover); }
+.aip-go:active { background: var(--aip-skin-on-down); }
+.aip-go:active > * { transform: translateY(1px); }
+.aip-slot[data-risk="check"] .aip-go { background: var(--aip-skin-grey); }
+.aip-slot[data-risk="check"] .aip-go:active { background: var(--aip-skin-grey-down); }
+.aip-slot[data-risk="check"] .aip-go-key { color: var(--aip-text-grey); }
+.aip-slot[data-risk="destructive"] .aip-go { background: var(--aip-skin-red); }
+.aip-slot[data-risk="destructive"] .aip-go:active { background: var(--aip-skin-red-down); }
+.aip-slot[data-risk="destructive"] .aip-go-key { color: var(--aip-key-red); }
+
+/* status column: same place as GO while running / after failure / when unusable */
+.aip-stat {
+  flex: none;
+  align-self: stretch;
+  width: var(--aip-go-w);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  background: var(--aip-page);
+  border-left: 1px solid #000;
+  text-align: center;
+}
+.aip-stat-big   { font-size: 13px; line-height: 15px; color: var(--aip-amber); }
+.aip-stat-small { font-size: 8px; line-height: 10px; color: var(--aip-text-grey); }
+.aip-stat-label { font-size: 9px; line-height: 11px; color: var(--aip-text-grey); }
+.aip-stat-label.is-failed { color: var(--aip-red); }
+.aip-stat-label.is-dim { color: var(--aip-text-dim); }
+
+/* done: one line, then fades */
+.aip-slot--done { height: 28px; align-items: center; gap: 8px; padding: 0 10px; background: var(--aip-slot-done); transition: opacity 1s; }
+.aip-slot--done .aip-done-ico { color: var(--aip-green); display: flex; }
+.aip-slot--done .aip-done-title { flex: 1; min-width: 0; color: var(--aip-text-grey); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.aip-slot--done .aip-done-word { font-size: 9px; color: var(--aip-text-dim); }
+.aip-slot--done.is-fading { opacity: 0; }
+
+/* notices */
+.aip-notice { flex: none; display: flex; align-items: flex-start; gap: 8px; padding: 8px 9px; }
+.aip-notice-k { flex: none; width: 40px; font-size: 9px; line-height: 13px; color: var(--aip-text-dim); }
+.aip-notice-t { flex: 1; min-width: 0; color: var(--aip-text-grey); }
+.aip-notice--boxed { background: var(--aip-slot-done); border: 1px solid var(--aip-edge); border-radius: 3px; }
+.aip-notice-led { flex: none; width: 12px; height: 15px; display: flex; align-items: center; justify-content: center; }
+.aip-notice-led::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--aip-pumpkin); }
+.aip-notice-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.aip-notice-title { font-size: 12px; line-height: 15px; }
+
+/* motion: arrive / dismiss (only these, see IMPLEMENTATION.md §7) */
+.aip-slot.is-entering { animation: aip-enter .16s ease-out; }
+.aip-slot.is-leaving  { animation: aip-leave .12s ease-in forwards; }
+@keyframes aip-enter { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+@keyframes aip-leave { to { opacity: 0; } }
+
+/* ---------------------------------------------------------------- typed prompt */
+
+.aip-prompt { flex: none; padding: 0 6px 6px; }
+.aip-input {
+  display: block;
+  width: 100%;
+  height: 26px;
+  margin: 0;
+  padding: 0 8px;
+  background: var(--aip-field);
+  border: 1px solid var(--aip-field-edge);
+  border-radius: 3px;
+  color: var(--aip-text);
+  font: bold 10px/1 var(--luna-font);
+  text-shadow: none;
+  outline: none;
+  -webkit-user-select: text;
+  user-select: text;
+}
+.aip-input::placeholder { color: var(--aip-text-dim); }
+.aip-input:focus { border-color: var(--luna-btn-blue-top); }
+
+/* ---------------------------------------------------------------- popovers */
+
+/* Saved setups: LUNA popover skin. Anchored under the SETUPS cell, right edge 7px from the panel edge. */
+.aip-pop-setups {
+  position: absolute;
+  z-index: 10;
+  right: 7px;
+  width: min(318px, calc(100% - 14px));
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 8px;
+  background: var(--aip-popover-bg);
+  border: 1px solid #000;
+  border-radius: 4px;
+  box-shadow: 0 3px 8px rgba(0,0,0,.5);
+}
+.aip-pop-head {
+  height: 34px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  background: var(--aip-popover-header);
+  border-bottom: 1px solid #000;
+  border-radius: 3px 3px 0 0;
+}
+.aip-pop-title { flex: 1; font-size: 14px; line-height: 16px; color: var(--luna-text-popover-header); }
+.aip-pop-esc { font-size: 9px; color: var(--aip-text-grey); }
+.aip-pop-list { display: flex; flex-direction: column; gap: 2px; padding: 6px 6px 0; max-height: 320px; overflow-y: auto; }
+.aip-setup {
+  height: 32px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 6px 0 10px;
+  background: var(--aip-page);
+  border: 1px solid #000;
+  border-radius: 2px;
+}
+.aip-setup-name { flex: 1; min-width: 0; font-size: 12px; line-height: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.aip-setup-steps { flex: none; font-size: 9px; color: var(--aip-text-grey); }
+.aip-setup-use { height: 22px; padding: 0 10px; }
+.aip-setup-del { flex: none; width: 20px; height: 22px; display: flex; align-items: center; justify-content: center; color: var(--aip-text-grey); }
+.aip-setup-del:hover { color: var(--aip-hover); }
+.aip-setup.is-confirm { background: var(--aip-destructive-tint); }
+.aip-pop-hint { padding: 8px 12px 0; color: rgba(229,245,255,.8); }
+.aip-pop-empty { padding: 10px 12px 2px; color: rgba(229,245,255,.8); }
+
+/* Mic list: LUNA context-menu skin. Anchored under + MIC, right edge 6px from the panel edge. */
+.aip-pop-mics {
+  position: absolute;
+  z-index: 10;
+  right: 6px;
+  width: 250px;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-bottom: 4px;
+  background: var(--aip-menu-bg);
+  border: 1px solid rgba(0,0,0,.7);
+  border-radius: 3px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.4);
+  text-shadow: none;
+}
+.aip-menu-head { height: 22px; display: flex; align-items: center; padding: 0 8px; background: var(--aip-menu-header-bg); color: var(--aip-menu-header-text); font-size: 10px; text-transform: uppercase; }
+.aip-menu-item { width: 100%; height: 22px; display: flex; align-items: center; gap: 8px; padding: 0 8px; color: var(--aip-menu-text); text-align: left; }
+.aip-menu-item:hover:not([disabled]) { background: var(--aip-menu-hover-bg); color: #FFF; }
+.aip-menu-item:hover:not([disabled]) .aip-menu-sub { color: #FFF; }
+.aip-menu-item[disabled] { color: var(--aip-menu-disabled); }
+.aip-menu-item[disabled] .aip-menu-sub { color: var(--aip-menu-disabled); }
+.aip-menu-name { flex: 1; min-width: 0; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.aip-menu-sub { flex: none; font-size: 9px; color: var(--aip-menu-sub); }
+.aip-menu-note { padding: 6px 8px 2px; font-size: 9px; color: var(--aip-menu-sub); }
+
+@media (prefers-reduced-motion: reduce) {
+  .aip *, .aip *::before, .aip *::after { animation: none !important; transition: none !important; }
+}

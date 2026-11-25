@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Spark MCP panel states</title>
+  <link rel="stylesheet" href="../ui/tokens.css">
+  <link rel="stylesheet" href="../ui/panel.css">
+  <link rel="stylesheet" href="../ui/spark.css">
+  <style>
+    html, body { background: #0d0e0f; height: auto; }
+    body { display: flex; flex-wrap: wrap; gap: 14px; padding: 14px; width: 1060px; }
+    figure { margin: 0; }
+    figcaption { padding-bottom: 6px; color: #a1adb3; font: bold 10px Helvetica, Arial, sans-serif; }
+    .frame { width: 340px; height: 400px; position: relative; }
+  </style>
+</head>
+<body>
+  <script>globalThis.Luna = { float: (v) => v };</script>
+  <script src="../ui/render.js"></script>
+  <script src="../logic.js"></script>
+  <script>
+    // Every state the panel can draw, from the same view the live panel uses.
+    const change = (a, b, c) => ({ crestDb: c, bands: { low_mid: a, high_mid: b } });
+    const shootout = (extra) => ({
+      status: 'ready', trackName: 'Vocal', problem: 'lost in the chorus', section: { label: 'Bars 17-25' }, listening: '2', blind: true,
+      candidates: [
+        { key: '1', pluginId: 'a', name: 'LA-2A Silver Compressor', presetName: 'Backing Vocals', why: 'Smooth levelling that lets the vocal sit forward without pumping.', change: change(-1.2, 1.8, -2.1), verdict: 'changed' },
+        { key: '2', pluginId: 'b', name: '1176LN Rev E Compressor', presetName: 'Average Vocal Compression', why: 'Faster, with more bite in the 2 to 4 kHz range the guitars are masking.', change: change(-0.8, 2.6, -3.4), verdict: 'changed' },
+        { key: '3', pluginId: 'c', name: 'Empirical Labs Distressor', presetName: null, why: 'Adds harmonics, so it reads louder without more level.', change: change(0.1, 0.2, 0), verdict: 'quiet' },
+      ],
+      ...extra,
+    });
+    const picks = [
+      { kept: { name: '1176LN Rev E Compressor', presetName: 'Average Vocal Compression' }, role: 'lead vocal', blind: true },
+      { kept: { name: 'Pultec EQP-1A', presetName: null }, role: 'bass', blind: false },
+    ];
+    const states = [
+      ['Listening, blind', shootout(), [], { looping: true }],
+      ['Names shown', shootout({ blind: false }), [], { looping: true }],
+      ['Printing', { status: 'printing', trackName: 'Vocal', section: { label: 'Bars 17-25' }, progress: 'Printing candidate 2 of 3', heartbeatAt: Date.now(), candidates: [] }, []],
+      ['Kept', shootout({ status: 'kept', keptKey: '2', blindAll: true }), picks],
+      ['Stalled', { status: 'printing', trackName: 'Vocal', section: { label: 'Bars 17-25' }, heartbeatAt: 0, candidates: [] }, []],
+      ['Stopped', { status: 'error', trackName: 'Vocal', section: { label: 'Bars 17-25' }, error: 'Vocal has no audio in Bars 17-25. Pick a section where it plays.', candidates: [] }, []],
+      ['Ready, nothing yet', null, [], { needsKey: true }, { view: { track: 'Drums', section: 'Bars 17-21', detail: 'Say what the track needs' } }],
+      ['Working', null, [], { working: true }, { view: { state: 'thinking', word: 'WORKING', detail: 'Measuring Drums', track: 'Drums', section: 'Bars 17-21' } }],
+      ['Typing', null, [], {}, { view: { track: 'Drums', section: 'Bars 17-21' }, typed: 'make these drums more explosive' }],
+      ['Replied', shootout({ blind: true, listening: '0' }), [], { reply: 'Ready. Listen for how the hits jump out against the bass. Your drums are also about 15 dB under the mix, so try the fader too.' }],
+      ['Settings', null, [], { needsKey: true, settings: { providers: [{ id: 'anthropic', short: 'CLAUDE', label: 'Anthropic' }, { id: 'openai', short: 'OPENAI', label: 'OpenAI' }, { id: 'compatible', short: 'OTHER', label: 'OpenAI-compatible' }], provider: 'anthropic', key: '', keyPlaceholder: 'Paste your API key', model: 'claude-opus-5-5', note: 'Your key stays in your keychain and only goes to the provider you choose. Your requests and the measurements go there too, not your audio.' } }, { view: { track: 'Drums', section: 'Bars 17-21' } }],
+    ];
+    const noop = () => {};
+    for (const [label, record, list, opt, extra] of states) {
+      const figure = document.createElement('figure');
+      const caption = document.createElement('figcaption');
+      caption.textContent = label;
+      const frame = document.createElement('div');
+      frame.className = 'frame';
+      figure.append(caption, frame);
+      document.body.append(figure);
+      const made = SparkPanel.createPanel(frame, { onListen: noop, onLoop: noop, onBlind: noop, onKeep: noop, onCancel: noop, onPrompt: noop, onSettings: noop, onProvider: noop, onSaveSettings: noop }).render(extra?.view ? { ...AddOnLogic.view(record), ...extra.view } : AddOnLogic.view(record), list, opt);
+      if (extra?.typed) { const box = frame.querySelector('.spk-prompt input'); box.value = extra.typed; box.classList.add('is-typed'); }
+      void made;
+    }
+  </script>
+</body>
+</html>

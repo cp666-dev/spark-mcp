@@ -1,0 +1,157 @@
+/*
+ * LUNA native design tokens, extracted 2026-10-29 from LUNA 3.1.1.4609:
+ *   - colours and text styles: /Applications/LUNA.app/Contents/Resources/appearance/Appearance.json
+ *   - surface colours: pixel-sampled from the @2x bitmap skins in images/backgrounds and images/buttons
+ * Source key in [brackets]. Values are exact unless marked "sampled" (centre pixel of the bitmap).
+ */
+:root {
+  /* ---- surfaces: LIVE values, pixel-sampled from LUNA 3.1.1 itself (screenshots/luna_native/03a, 11)
+         These override the bitmap samples below where they differ. In the running app the browsers are
+         near-black content (#1b1d1f) inside a slate frame (#484c4f); browser_bg.png is not the panel fill. ---- */
+  --luna-browser-content:       #1b1d1f;  /* LIVE: Tracks browser + Voice Control list area (= browser_list_bg.png) */
+  --luna-browser-frame:         #484c4f;  /* LIVE: side-panel header bar ("UA Assistive Intelligence" title strip), dividers */
+  --luna-section-header-bg:     #313437;  /* LIVE: "TRACKS" / "GROUPS" / "SETTINGS" / "LISTEN TO" section headers */
+  --luna-search-field-bg:       #242629;  /* LIVE: Tracks browser search field */
+  --luna-toolbar-bg:            #4c4f53;  /* LIVE: top toolbar */
+  --luna-transport-bg:          #202020;  /* LIVE: transport block */
+  --luna-timeline-bg:           #16181a;  /* LIVE: empty timeline */
+  --luna-track-header-bg:       #272d31;  /* LIVE: track header */
+  --luna-status-bar-bg:         #232528;  /* LIVE: bottom status bar (AUDIO / APOLLO / HOST) */
+
+  /* ---- surfaces from bitmap skins (reference; see LIVE values above) ---- */
+  --luna-browser-bg:            #474c4f;  /* [backgrounds/browser_bg.png] sampled. NOT the live panel fill: use --luna-browser-content */
+  --luna-browser-list-bg:       #1b1d1f;  /* [backgrounds/browser_list_bg.png] sampled; 1px edge #0d0e0f */
+  --luna-browser-header-top:    #575b5f;  /* [buttons/browser_header.png] sampled gradient top */
+  --luna-browser-header-bottom: #4b5053;  /* [buttons/browser_header.png] sampled gradient bottom; 1px #000 edge */
+  --luna-browser-category-bg:   #1f1f1f;  /* [backgrounds/browser_bg_category.png] */
+  --luna-section-header-tint:   rgba(255,255,255,.05); /* [backgrounds/browser_section_header.png] white @ a=13 */
+  --luna-meterbridge-top:       #53585b;  /* [backgrounds/meterbridge_bg.png] (Table-List-View-Cell) */
+  --luna-meterbridge-mid:       #474b4e;
+  --luna-meterbridge-bottom:    #2e3133;
+  --luna-scrollbar-bg:          rgb(35,37,40);   /* [timeline_scrollbar_background] */
+  --luna-track-headers-footer:  rgb(30,32,34);   /* [track_headers_footer] */
+  --luna-rulers-extra:          rgb(40,43,46);   /* [rulers_extra] */
+  --luna-separator:             rgb(82,87,89);   /* [channel_strip_separator_line] */
+
+  /* ---- fields ---- */
+  --luna-field-bg:              #232629;  /* [backgrounds/browser_text_edit_field.png] sampled */
+  --luna-field-edge:            #111314;
+  --luna-field-dark-bg:         #141617;  /* [backgrounds/browser_field_dark.png] */
+  --luna-field-dark-edge:       #0a0b0b;
+
+  /* ---- buttons (bitmap skins: 1px black edge @ a=214, vertical gradient) ---- */
+  --luna-btn-grey-top:          #3c4145;  /* [buttons/browser_button_grey.png] */
+  --luna-btn-grey-bottom:       #363a3e;
+  --luna-btn-blue-top:          #41535f;  /* [buttons/browser_button_blue.png] = "on"/active */
+  --luna-btn-blue-bottom:       #3a4c58;
+  --luna-btn2-grey-top:         #3f4040;  /* [buttons/browser_btn_grey.png] */
+  --luna-btn2-grey-on-top:      #505152;  /* [buttons/browser_btn_grey_on.png] */
+  --luna-btn-edge:              rgba(0,0,0,.84);
+
+  /* ---- text ---- */
+  --luna-text-header:           rgb(229,245,255);      /* [Browser-Header color-text-off], [Browser-Section-Header] */
+  --luna-text-section:          rgba(240,250,255,.8);  /* [Browser-Section-Header-Text] */
+  --luna-text-button:           rgb(239,249,254);      /* [Browser-Button] */
+  --luna-text-static:           rgb(223,223,223);      /* [white_dim] via Browser-Static-Text */
+  --luna-text-row:              rgba(255,255,255,.7);  /* [Markers-List-View-Row color-text-off] */
+  --luna-text-cell:             rgb(226,226,227);      /* [Table-List-View-Cell] */
+  --luna-text-grey:             rgb(161,173,179);      /* [grey_text] */
+  --luna-text-light-grey:       rgb(229,246,255);      /* [light_grey_text] */
+  --luna-text-popover-header:   rgba(255,255,255,.7);  /* [Popover-Header] */
+
+  /* ---- accents ---- */
+  --luna-selected:              rgb(255,186,0);        /* [Browser-Header/Markers-List-View-Row/Table cell color-text-on]: selection/active text */
+  --luna-selected-row:          rgba(255,186,0,.9);
+  --luna-pumpkin-spice:         rgb(255,197,74);       /* [pumpkin_spice]: group enabled, brand gold */
+  --luna-hover-yellow:          rgb(255,230,177);      /* [yellow_text_mouseover] */
+  --luna-dnd-overlay:           rgba(246,201,91,.3);   /* [browser_dnd_overlay] */
+  --luna-group:                 rgb(193,207,215);      /* [group] */
+  --luna-tape-a:                rgb(254,104,75);       /* [tape_machine_a..d]: LUNA's categorical set */
+  --luna-tape-b:                rgb(137,198,97);
+  --luna-tape-c:                rgb(39,151,142);
+  --luna-tape-d:                rgb(186,96,208);
+
+  /* ---- text treatment (LUNA draws a 1px stroke / bevel under almost every label) ---- */
+  --luna-text-stroke:           0 0 1px rgba(0,0,0,.3);     /* [text-stroke 1.0, color-text-stroke 0,0,0,0.3] */
+  --luna-text-bevel:            0 1px 0 rgba(0,0,0,.42);    /* [color-text-bevel 0,0,0,0.42] */
+
+  /* ---- type (all Helvetica Bold unless noted; available in the Add On web view) ---- */
+  --luna-font:                  Helvetica, Arial, sans-serif;
+  --luna-font-alt:              "Oxygen", Helvetica, sans-serif; /* bundled: fonts/Oxygen*.otf; dialog headers, popover buttons */
+  --luna-size-browser:          10px;  /* Browser-Header, Section-Header, Button, Static-Text, fields: bold */
+  --luna-size-list-row:         12px;  /* Markers-List-View-Row: bold */
+  --luna-size-popover-header:   14px;  /* Popover-Header: bold */
+  --luna-size-small:            9px;   /* Track-Header field labels, column headers */
+}
+
+/*
+ * ---- UA Assistive Intelligence (V2 "Strip") additions -----------------------------------------
+ * Every value below is either a LUNA value from above, or sampled from a LUNA @2x skin
+ * (source in [brackets]). Nothing here is invented colour.
+ */
+:root {
+  /* text treatment: LUNA's bevel + stroke, applied to all labels on dark surfaces */
+  --aip-text-shadow:      0 1px 0 rgba(0,0,0,.42), 0 0 1px rgba(0,0,0,.3);
+
+  /* text */
+  --aip-text:             var(--luna-text-header);        /* #E5F5FF primary labels, titles */
+  --aip-text-step:        var(--luna-text-static);        /* #DFDFDF step text */
+  --aip-text-row:         var(--luna-text-row);           /* rgba(255,255,255,.7) live caption */
+  --aip-text-grey:        var(--luna-text-grey);          /* #A1ADB3 secondary */
+  --aip-text-dim:         rgba(161,173,179,.45);          /* grey_text @ 45%: keys, todo steps, zero counts */
+  --aip-text-section:     var(--luna-text-section);       /* rgba(240,250,255,.8) section header */
+  --aip-text-destructive: #FFD9D0;                        /* tape_machine_a lightened for text on red tint */
+
+  /* surfaces */
+  --aip-page:             var(--luna-browser-content);    /* #1B1D1F */
+  --aip-line:             #0D0E0F;                        /* [browser_list_bg.png edge] */
+  --aip-section:          var(--luna-section-header-bg);  /* #313437 */
+  --aip-field:            var(--luna-field-bg);           /* #232629 */
+  --aip-field-edge:       var(--luna-field-edge);         /* #111314 */
+  --aip-field-dark:       var(--luna-field-dark-bg);      /* #141617 caption field, slot well */
+  --aip-slot:             #2A2E31;                        /* slot tile = unlit meter segment */
+  --aip-slot-done:        #202326;
+  --aip-edge:             rgba(0,0,0,.84);                /* --luna-btn-edge */
+  --aip-bridge:           linear-gradient(#53585B, #474B4E 50%, #2E3133); /* [meterbridge_bg.png] */
+
+  /* button skins (vertical gradients, 1px black edge) */
+  --aip-skin-grey:        linear-gradient(var(--luna-btn-grey-top), var(--luna-btn-grey-bottom));
+  --aip-skin-on:          linear-gradient(var(--luna-btn-blue-top), var(--luna-btn-blue-bottom));
+  --aip-skin-red:         linear-gradient(#8A2C2C, #832525);                /* [browser_button_red.png] */
+  --aip-skin-grey-down:   linear-gradient(var(--luna-btn-grey-bottom), var(--luna-btn-grey-top));
+  --aip-skin-on-down:     linear-gradient(var(--luna-btn-blue-bottom), var(--luna-btn-blue-top));
+  --aip-skin-red-down:    linear-gradient(#832525, #8A2C2C);
+  --aip-key-on:           #A9C1D3;                        /* key hint on blue skin */
+  --aip-key-red:          #E6A9A9;                        /* key hint on red skin */
+  --aip-seg-underline:    #8DB3D3;                        /* [12b SHOW popover: "on" segment underline] */
+
+  /* tags [browser_tag_bg_*.png] */
+  --aip-tag-yellow:       #CE9F3C;
+  --aip-tag-red:          #8A2C2C;
+  --aip-tag-blue:         var(--luna-btn-blue-top);
+  --aip-tag-grey:         #3F4040;                        /* --luna-btn2-grey-top */
+  --aip-destructive-tint: rgba(138,44,44,.35);
+
+  /* accents */
+  --aip-amber:            var(--luna-selected);           /* #FFBA00 active / hearing / running */
+  --aip-pumpkin:          var(--luna-pumpkin-spice);      /* #FFC54A check-me, offline LED, meter hot zone */
+  --aip-hover:            var(--luna-hover-yellow);       /* #FFE6B1 hover text, arrive flash */
+  --aip-green:            var(--luna-tape-b);             /* #89C661 done, meter */
+  --aip-red:              var(--luna-tape-a);             /* #FE684B failed */
+
+  /* popovers */
+  --aip-popover-bg:       #737B80;                        /* [browser_modal_bg.png] */
+  --aip-popover-header:   linear-gradient(var(--luna-browser-header-top), var(--luna-browser-header-bottom));
+  --aip-menu-bg:          #BEC5C9;                        /* [13b context menu] */
+  --aip-menu-header-bg:   #A3ABB0;
+  --aip-menu-header-text: #33557D;
+  --aip-menu-text:        #111111;
+  --aip-menu-sub:         #3D4448;
+  --aip-menu-disabled:    #7B8388;
+  --aip-menu-hover-bg:    #7F9BB5;
+
+  /* metrics (1x CSS px; LUNA renders at devicePixelRatio 2) */
+  --aip-go-w:             62px;   /* 56px at <= 330px wide */
+  --aip-setups-w:         92px;
+}
+@media (max-width: 330px) { :root { --aip-go-w: 56px; } }

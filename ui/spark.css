@@ -1,0 +1,94 @@
+/*
+ * Spark MCP: what the shootout adds to the Assistive Intelligence panel. tokens.css and panel.css
+ * are copied unchanged from assistant/, so everything here is built from their tokens.
+ */
+
+.aip-ctx { padding-bottom: 6px; }
+
+.spk-loop.is-on { background: var(--aip-skin-on); }
+.spk-loop.is-on svg { color: var(--aip-amber); }
+
+/* a candidate is a slot; its right edge is the target, like GO */
+.spk-row { cursor: default; }
+.spk-row.is-on { border-color: var(--aip-seg-underline); }
+.spk-row.is-on .aip-slot-n { background: var(--aip-amber); border-color: #000; color: var(--aip-page); text-shadow: none; }
+.spk-row.is-on .aip-slot-title { color: var(--aip-hover); }
+.spk-row .aip-slot-body { gap: 5px; padding: 7px 8px 8px 9px; }
+.spk-row .aip-slot-title { min-height: 16px; display: flex; align-items: center; }
+.spk-row--original .aip-slot-body { justify-content: center; }
+
+.spk-hear { background: var(--aip-skin-grey); }
+.spk-hear:active { background: var(--aip-skin-grey-down); }
+.spk-row.is-on .spk-hear { background: var(--aip-skin-on); }
+.spk-row.is-on .spk-hear:active { background: var(--aip-skin-on-down); }
+.spk-row.is-on .spk-hear .aip-go-label { color: var(--aip-amber); }
+.spk-row .spk-hear .aip-go-key { color: var(--aip-text-grey); }
+.spk-row.is-on .spk-hear .aip-go-key { color: var(--aip-key-on); }
+
+/* the two decisions, always in the same place */
+.spk-actions { flex: none; display: flex; gap: 4px; padding: 0 6px 6px; }
+.spk-action { height: 34px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; border: 1px solid #000; border-radius: 3px; }
+.spk-action > :first-child { font-size: 12px; line-height: 14px; }
+.spk-action > :last-child { font-size: 8px; line-height: 10px; color: var(--aip-text-grey); }
+.spk-keep { flex: 1; min-width: 0; background: var(--aip-skin-on); }
+.spk-keep > :last-child { color: var(--aip-key-on); }
+.spk-keep:hover > :first-child { color: var(--aip-hover); }
+.spk-keep:active { background: var(--aip-skin-on-down); }
+.spk-keep[disabled] { background: var(--aip-skin-grey); color: var(--aip-text-dim); }
+.spk-keep[disabled] > :last-child { color: var(--aip-text-dim); }
+.spk-keep[disabled]:hover > :first-child { color: inherit; }
+.spk-cancel { flex: none; width: var(--aip-go-w); background: var(--aip-skin-grey); }
+.spk-cancel.is-wide { flex: 1; width: auto; }
+.spk-cancel:hover > :first-child { color: var(--aip-hover); }
+.spk-cancel:active { background: var(--aip-skin-grey-down); }
+
+/* printing: the mark does the moving, and the words stay put */
+.spk-progress { display: flex; align-items: center; gap: 8px; padding: 8px 9px; color: var(--aip-amber); }
+.spk-progress::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--aip-amber); animation: aip-think .9s ease-in-out infinite alternate; }
+
+/* what the assistant says, above whatever it set up: full-strength text, sized to read at a glance */
+.spk-reply { flex: none; padding: 9px 10px; font-size: 12px; line-height: 17px; font-weight: normal; color: var(--aip-text); text-shadow: none; background: var(--aip-slot-done); border: 1px solid var(--aip-edge); border-radius: 3px; -webkit-user-select: text; user-select: text; overflow-wrap: anywhere; }
+
+/*
+ * The prompt: always the bottom of the panel. What you type is white at 13px on the darkest field,
+ * the hint is the readable grey rather than the dim one, and focus is a clear blue edge with an
+ * amber caret. WebKit can paint input text with its own fill colour, so that is set too.
+ */
+.spk-actions + .spk-prompt, .spk-prompt { padding-top: 0; }
+.spk-prompt .aip-input {
+  height: 34px;
+  padding: 0 10px;
+  background: var(--aip-field-dark);
+  border: 1px solid var(--aip-edge);
+  border-radius: 3px;
+  color: #FFFFFF;
+  -webkit-text-fill-color: #FFFFFF;
+  caret-color: var(--aip-amber);
+  font: normal 13px/1.2 var(--luna-font);
+  letter-spacing: 0.1px;
+}
+.spk-prompt .aip-input::placeholder { color: var(--aip-text-grey); -webkit-text-fill-color: var(--aip-text-grey); opacity: 1; }
+.spk-prompt .aip-input:focus { border-color: var(--aip-seg-underline); box-shadow: 0 0 0 1px var(--aip-seg-underline); }
+.spk-prompt .aip-input[disabled] { color: var(--aip-text-grey); -webkit-text-fill-color: var(--aip-text-grey); background: var(--aip-field); }
+.spk-prompt .aip-input[disabled]::placeholder { color: var(--aip-amber); -webkit-text-fill-color: var(--aip-amber); }
+.spk-add-key { align-self: flex-start; height: 24px; margin-top: 2px; }
+.aip-btn.spk-gear { width: 22px; padding: 0; color: var(--aip-text-grey); }
+
+/* model settings, on LUNA's popover skin */
+.spk-settings { top: 58px; gap: 8px; }
+.spk-field { display: flex; align-items: center; gap: 8px; margin: 0 8px; }
+.spk-settings .aip-seg { margin-top: 8px; }
+.spk-settings .aip-kv-k { color: rgba(229,245,255,.8); }
+.spk-settings .aip-input { flex: 1; min-width: 0; height: 28px; font: normal 12px/1.2 var(--luna-font); color: #FFFFFF; -webkit-text-fill-color: #FFFFFF; caret-color: var(--aip-amber); }
+.spk-settings .aip-input::placeholder { color: var(--aip-text-grey); -webkit-text-fill-color: var(--aip-text-grey); opacity: 1; }
+.spk-settings-actions { display: flex; justify-content: flex-end; margin: 0 8px; }
+.spk-settings .aip-pop-hint { padding: 0 8px; font-size: 11px; line-height: 15px; color: #FFFFFF; }
+
+/* a pick */
+.spk-pick { flex: none; display: flex; align-items: center; gap: 6px; height: 28px; padding: 0 8px; background: var(--aip-slot-done); border: 1px solid var(--aip-edge); border-radius: 3px; }
+.spk-pick-name { flex: 1; min-width: 0; color: var(--aip-text-grey); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.spk-pick-role { flex: none; max-width: 40%; font-size: 9px; color: var(--aip-text-dim); text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.spk-picks-title { flex: none; padding: 6px 4px 2px; font-size: 9px; line-height: 12px; color: var(--aip-text-dim); text-transform: uppercase; }
+
+.spk-tag-blind { cursor: default; }
+.spk-tag-blind.is-off { background: var(--aip-skin-grey); color: var(--aip-text-grey); }

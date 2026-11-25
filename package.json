@@ -1,0 +1,26 @@
+{
+  "name": "spark-mcp",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Spark MCP: blind plugin shootouts on your own tracks, in a LUNA panel or from any MCP agent",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "mcp": "node server/index.mjs",
+    "check:live": "node tests/live-shootout.mjs"
+  },
+  "devDependencies": {
+    "vite": "8.3.0",
+    "vitest": "5.0.1"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2"
+  },
+  "bin": {
+    "spark-mcp": "server/index.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
